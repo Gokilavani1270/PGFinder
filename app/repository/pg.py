@@ -16,6 +16,12 @@ def create_pg(pg_data: schemas.PGCreate, db:Session = Depends(db.get_db)):
     db.refresh(new_pg)
     return {"message" : "PG Details added Successfully !"}
 
-def show(db: Session = Depends(db.get_db)):
+def show_all(db: Session = Depends(db.get_db)):
     pgs = db.query(models.PG).all()
     return pgs
+
+def show(id, db: Session = Depends(db.get_db)):
+    pg = db.query(models.PG).filter(models.PG.id==id).first()
+    if not pg:
+        raise HTTPException(status_code=404, detail = f"Blog with the id {id} is not available")
+    return pg
