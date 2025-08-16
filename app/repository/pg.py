@@ -15,3 +15,7 @@ def create_pg(pg_data: schemas.PGCreate, db:Session = Depends(db.get_db)):
     db.commit()
     db.refresh(new_pg)
     return {"message" : "PG Details added Successfully !"}
+
+def show(db: Session = Depends(db.get_db)):
+    pgs = db.query(models.PG).all()
+    return pgs
