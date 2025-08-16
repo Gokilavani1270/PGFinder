@@ -28,3 +28,7 @@ def update(id, request: schemas.PGUpdate, db: Session = Depends(db.get_db)):
         "message": "Details updated successfully!",
         "updated_pg": updated_pg  # FastAPI converts SQLAlchemy object using PGResponse
     }
+
+@router.delete('/{id}', response_model=schemas.MessageResponse)
+def delete(id, db: Session = Depends(db.get_db)):
+    return pg.delete(id, db)

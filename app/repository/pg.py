@@ -37,3 +37,10 @@ def update(id, request: schemas.PGUpdate, db: Session = Depends(db.get_db)):
     db.commit()
     db.refresh(pg)
     return pg 
+
+def delete(id, db: Session = Depends(db.get_db)):
+    pg = db.query(models.PG).filter(models.PG.id == id).delete(synchronize_session=False)
+    if not pg:
+        raise HTTPException(status_code=404, detail = f"PG with the id {id} is not available")
+    db.commit()
+    return {"message" : "Deleted the PG details !"}
