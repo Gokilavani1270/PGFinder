@@ -23,5 +23,17 @@ def show_all(db: Session = Depends(db.get_db)):
 def show(id, db: Session = Depends(db.get_db)):
     pg = db.query(models.PG).filter(models.PG.id==id).first()
     if not pg:
-        raise HTTPException(status_code=404, detail = f"Blog with the id {id} is not available")
+        raise HTTPException(status_code=404, detail = f"PG with the id {id} is not available")
     return pg
+
+def update(id, request: schemas.PGUpdate, db: Session = Depends(db.get_db)):
+    pg = db.query(models.PG).filter(models.PG.id==id).first()
+    if not pg:
+        raise HTTPException(status_code=404, detail = f"PG with the id {id} is not available")
+    
+    for field, value in request.dict(exclude_unset=True).items():
+        setattr(pg, field, value)
+
+    db.commit()
+    db.refresh(pg)
+    return pg 

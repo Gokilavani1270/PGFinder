@@ -33,6 +33,12 @@ class PGBase(BaseModel):
 class PGCreate(PGBase):
     pass
 
+class PGResponse(PGBase):
+    id: int
+
+    class Config:
+        orm_mode = True
+
 class PGUpdate(BaseModel):
     name: Optional[str]
     address: Optional[str]
@@ -40,8 +46,6 @@ class PGUpdate(BaseModel):
     rent: Optional[float]
     amenities: Optional[str]
 
-class PGResponse(PGBase):
-    id: int
-
-    class Config:
-        orm_mode = True
+class PGUpdateResponse(BaseModel):
+    message : str
+    updated_pg : PGResponse
