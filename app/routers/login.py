@@ -4,7 +4,9 @@ from .. import schemas, models, db
 from ..repository import login
 from ..token import verify_access_token
 
-router = APIRouter()
+router = APIRouter(
+    tags = ['User']
+)
 
 get_db = db.get_db
 

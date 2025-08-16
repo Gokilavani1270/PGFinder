@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from .routers import login
+from .routers import login, pg
 from .db import Base, engine
 
 app=FastAPI()
@@ -13,3 +13,4 @@ def index():
 	return 'Hellow world'
 
 app.include_router(login.router)
+app.include_router(pg.router)

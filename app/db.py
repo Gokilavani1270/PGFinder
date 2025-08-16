@@ -15,7 +15,9 @@ def get_db():
         db.close()
 
 def create_tables():
+    from .models import User, PG    #Add this line if we are creating more than one table in db and import all the tables name
     Base.metadata.create_all(bind = engine)
+    print("Tables created!")
 
 if __name__ == "__main__":
     create_tables()

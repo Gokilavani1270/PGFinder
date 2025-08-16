@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, Float
 from .db import Base
 from passlib.context import CryptContext
 
@@ -18,3 +18,13 @@ class User(Base):
 
     def check_password(self, password):
         return pwd_cxt.verify(password, self.password)
+    
+class PG(Base):
+    __tablename__ = "pg"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=False)
+    address = Column(String, nullable=False)
+    rooms = Column(Integer, nullable=False)
+    rent = Column(Float, nullable=False)
+    amenities = Column(String)
