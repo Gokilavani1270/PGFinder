@@ -15,5 +15,4 @@ def create_pg(pg_data: schemas.PGCreate, db:Session = Depends(db.get_db)):
 
 @router.get('/', response_model=list[schemas.PGResponse])
 def show(db: Session = Depends(db.get_db)):
-    pgs = pg.show(db)
-    return pgs
+    return pg.show(db)
