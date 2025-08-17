@@ -38,6 +38,13 @@ def search_by_rent(rent: float, db: Session = Depends(db.get_db)):
         raise HTTPException(status_code=404, detail = f"PG is not available with the rent {rent}")
     return pg
 
+def search_by_address(address: str, db: Session = Depends(db.get_db)):
+    pg = db.query(models.PG).filter(models.PG.address==address).all()
+    #filter(models.PG.address.ilike(f"%{address}%")
+    if not pg:
+        raise HTTPException(status_code=404, detail = f"PG is not available in {address}")
+    return pg
+
 def update(id, request: schemas.PGUpdate, db: Session = Depends(db.get_db)):
     pg = db.query(models.PG).filter(models.PG.id==id).first()
     if not pg:
