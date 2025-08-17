@@ -25,6 +25,10 @@ def search_by_pgid(id:int, db: Session = Depends(db.get_db)):
 def search_by_pgname(pg_name:str, db: Session = Depends(db.get_db)):
     return pg.search_by_pgname(pg_name, db)
 
+@router.get('/rent/{rent}', response_model=list[schemas.PGResponseUser])
+def search_by_rent(rent:float, db: Session = Depends(db.get_db)):
+    return pg.search_by_rent(rent, db)
+
 @router.put('/{id}', response_model=schemas.PGUpdateResponse)
 def update(id, request: schemas.PGUpdate, db: Session = Depends(db.get_db)):
     updated_pg = pg.update(id, request, db)

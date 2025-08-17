@@ -32,6 +32,12 @@ def search_by_pgname(pg_name: str, db: Session = Depends(db.get_db)):
         raise HTTPException(status_code=404, detail = f"PG with the Name {pg_name} is not available")
     return pg
 
+def search_by_rent(rent: float, db: Session = Depends(db.get_db)):
+    pg = db.query(models.PG).filter(models.PG.rent==rent).all()
+    if not pg:
+        raise HTTPException(status_code=404, detail = f"PG is not available with the rent {rent}")
+    return pg
+
 def update(id, request: schemas.PGUpdate, db: Session = Depends(db.get_db)):
     pg = db.query(models.PG).filter(models.PG.id==id).first()
     if not pg:
