@@ -49,3 +49,6 @@ class PGUpdate(BaseModel):
 class PGUpdateResponse(BaseModel):
     message : str
     updated_pg : PGResponse
+
+class PGResponseUser(PGBase):
+    pass

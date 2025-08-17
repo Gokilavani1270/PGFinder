@@ -20,10 +20,16 @@ def show_all(db: Session = Depends(db.get_db)):
     pgs = db.query(models.PG).all()
     return pgs
 
-def show(id, db: Session = Depends(db.get_db)):
+def search_by_pgid(id, db: Session = Depends(db.get_db)):
     pg = db.query(models.PG).filter(models.PG.id==id).first()
     if not pg:
         raise HTTPException(status_code=404, detail = f"PG with the id {id} is not available")
+    return pg
+
+def search_by_pgname(pg_name: str, db: Session = Depends(db.get_db)):
+    pg = db.query(models.PG).filter(models.PG.name==pg_name).all()
+    if not pg:
+        raise HTTPException(status_code=404, detail = f"PG with the Name {pg_name} is not available")
     return pg
 
 def update(id, request: schemas.PGUpdate, db: Session = Depends(db.get_db)):
