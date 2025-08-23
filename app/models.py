@@ -12,6 +12,7 @@ class User(Base):
     email = Column(String, nullable=False)
     password = Column(String, nullable=False)
     phno = Column(String(10))
+    role = Column(String, default="user")
 
     def set_password(self, password):
         self.password = pwd_cxt.hash(password)

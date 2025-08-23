@@ -8,6 +8,7 @@ class CreateUser(BaseModel):
     email : str 
     password : str
     phno : str
+    role : str = "user"
 
 class LoginUser(BaseModel):
     email : str 

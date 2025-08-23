@@ -1,51 +1,54 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
-from .. import schemas, db, models
+from .. import schemas, db, models, token
+
+admin_required = token.admin_required
 
 
-def create_pg(pg_data: schemas.PGCreate, db:Session = Depends(db.get_db)):
-    new_pg = models.PG(
-        name = pg_data.name,
-        address = pg_data.address,
-        rooms = pg_data.rooms,
-        rent = pg_data.rent,
-        amenities = pg_data.amenities
-    )
+def create_pg(pg_data: schemas.PGCreate, db:Session = Depends(db.get_db), current_user: dict = Depends(admin_required)):
+    # new_pg = models.PG(
+    #     name = pg_data.name,
+    #     address = pg_data.address,
+    #     rooms = pg_data.rooms,
+    #     rent = pg_data.rent,
+    #     amenities = pg_data.amenities
+    # )
+    new_pg = models.PG(**pg_data.dict())
     db.add(new_pg)
     db.commit()
     db.refresh(new_pg)
     return {"message" : "PG Details added Successfully !"}
 
-def show_all(db: Session = Depends(db.get_db)):
+def show_all(db: Session = Depends(db.get_db), current_user: dict = Depends(token.get_current_user)):
     pgs = db.query(models.PG).all()
     return pgs
 
-def search_by_pgid(id, db: Session = Depends(db.get_db)):
+def search_by_pgid(id, db: Session = Depends(db.get_db), current_user: dict = Depends(token.get_current_user)):
     pg = db.query(models.PG).filter(models.PG.id==id).first()
     if not pg:
         raise HTTPException(status_code=404, detail = f"PG with the id {id} is not available")
     return pg
 
-def search_by_pgname(pg_name: str, db: Session = Depends(db.get_db)):
+def search_by_pgname(pg_name: str, db: Session = Depends(db.get_db), current_user: dict = Depends(token.get_current_user)):
     pg = db.query(models.PG).filter(models.PG.name==pg_name).all()
     if not pg:
         raise HTTPException(status_code=404, detail = f"PG with the Name {pg_name} is not available")
     return pg
 
-def search_by_rent(rent: float, db: Session = Depends(db.get_db)):
+def search_by_rent(rent: float, db: Session = Depends(db.get_db), current_user: dict = Depends(token.get_current_user)):
     pg = db.query(models.PG).filter(models.PG.rent==rent).all()
     if not pg:
         raise HTTPException(status_code=404, detail = f"PG is not available with the rent {rent}")
     return pg
 
-def search_by_address(address: str, db: Session = Depends(db.get_db)):
+def search_by_address(address: str, db: Session = Depends(db.get_db), current_user: dict = Depends(token.get_current_user)):
     pg = db.query(models.PG).filter(models.PG.address==address).all()
     #filter(models.PG.address.ilike(f"%{address}%")
     if not pg:
         raise HTTPException(status_code=404, detail = f"PG is not available in {address}")
     return pg
 
-def update(id, request: schemas.PGUpdate, db: Session = Depends(db.get_db)):
+def update(id, request: schemas.PGUpdate, db: Session = Depends(db.get_db), current_user: dict = Depends(admin_required)):
     pg = db.query(models.PG).filter(models.PG.id==id).first()
     if not pg:
         raise HTTPException(status_code=404, detail = f"PG with the id {id} is not available")
@@ -57,7 +60,7 @@ def update(id, request: schemas.PGUpdate, db: Session = Depends(db.get_db)):
     db.refresh(pg)
     return pg 
 
-def delete(id, db: Session = Depends(db.get_db)):
+def delete(id, db: Session = Depends(db.get_db), current_user: dict = Depends(admin_required)):
     pg = db.query(models.PG).filter(models.PG.id == id).delete(synchronize_session=False)
     if not pg:
         raise HTTPException(status_code=404, detail = f"PG with the id {id} is not available")

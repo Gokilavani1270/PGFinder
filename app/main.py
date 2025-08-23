@@ -4,6 +4,8 @@ from .db import Base, engine
 
 app=FastAPI()
 
+Base.metadata.create_all(bind = engine)
+
 # @app.on_event("startup")
 # def on_startup():
 #     Base.metadata.create_all(bind=engine)

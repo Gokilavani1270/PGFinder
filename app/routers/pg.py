@@ -1,8 +1,10 @@
 from fastapi import Depends, APIRouter
 from sqlalchemy.orm import Session
-from .. import schemas, db
+from .. import schemas, db, token
 from ..repository import pg
 from typing import List
+
+admin_required = token.admin_required
 
 router = APIRouter(
     prefix = '/pg',
@@ -10,31 +12,31 @@ router = APIRouter(
 )
 
 @router.post('/create', response_model=schemas.MessageResponse)
-def create_pg(pg_data: schemas.PGCreate, db:Session = Depends(db.get_db)):
+def create_pg(pg_data: schemas.PGCreate, db:Session = Depends(db.get_db), current_user: dict = Depends(admin_required)):
     return pg.create_pg(pg_data, db)
 
 @router.get('/', response_model=list[schemas.PGResponse])
-def show_all(db: Session = Depends(db.get_db)):
+def show_all(db: Session = Depends(db.get_db), current_user: dict = Depends(token.get_current_user)):
     return pg.show_all(db)
 
 @router.get('/id/{id}', response_model=schemas.PGResponse)
-def search_by_pgid(id:int, db: Session = Depends(db.get_db)):
+def search_by_pgid(id:int, db: Session = Depends(db.get_db), current_user: dict = Depends(token.get_current_user)):
     return pg.search_by_pgid(id, db)
 
 @router.get('/name/{pg_name}', response_model=list[schemas.PGResponseUser])
-def search_by_pgname(pg_name:str, db: Session = Depends(db.get_db)):
+def search_by_pgname(pg_name:str, db: Session = Depends(db.get_db), current_user: dict = Depends(token.get_current_user)):
     return pg.search_by_pgname(pg_name, db)
 
 @router.get('/rent/{rent}', response_model=list[schemas.PGResponseUser])
-def search_by_rent(rent:float, db: Session = Depends(db.get_db)):
+def search_by_rent(rent:float, db: Session = Depends(db.get_db), current_user: dict = Depends(token.get_current_user)):
     return pg.search_by_rent(rent, db)
 
 @router.get('/address/{address}', response_model=list[schemas.PGResponseUser])
-def search_by_address(address:str, db: Session = Depends(db.get_db)):
+def search_by_address(address:str, db: Session = Depends(db.get_db), current_user: dict = Depends(token.get_current_user)):
     return pg.search_by_address(address, db)
 
 @router.put('/{id}', response_model=schemas.PGUpdateResponse)
-def update(id, request: schemas.PGUpdate, db: Session = Depends(db.get_db)):
+def update(id, request: schemas.PGUpdate, db: Session = Depends(db.get_db), current_user: dict = Depends(admin_required)):
     updated_pg = pg.update(id, request, db)
     return {
         "message": "Details updated successfully!",
@@ -42,5 +44,5 @@ def update(id, request: schemas.PGUpdate, db: Session = Depends(db.get_db)):
     }
 
 @router.delete('/{id}', response_model=schemas.MessageResponse)
-def delete(id, db: Session = Depends(db.get_db)):
+def delete(id, db: Session = Depends(db.get_db), current_user: dict = Depends(admin_required)):
     return pg.delete(id, db)
