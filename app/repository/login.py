@@ -21,7 +21,7 @@ def registerUser(user_data: schemas.CreateUser, db:Session = Depends(db.get_db))
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
-    return {"message" : "User {new_user.email} registered as {new_user.role} Successfully !"}
+    return {"message" : f"User {new_user.email} registered as {new_user.role} Successfully !"}
 
 def loginUser(email: str, password: str, db: Session = Depends(db.get_db)):
     user = db.query(models.User).filter(models.User.email == email).first()

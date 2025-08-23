@@ -2,7 +2,7 @@ from fastapi import Depends, APIRouter
 from sqlalchemy.orm import Session
 from .. import schemas, db, token
 from ..repository import pg
-from typing import List
+
 
 admin_required = token.admin_required
 

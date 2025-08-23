@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from .routers import login, pg
+from .routers import login, pg, bookings, reviews
 from .db import Base, engine
 
 app=FastAPI()
@@ -16,3 +16,5 @@ def index():
 
 app.include_router(login.router)
 app.include_router(pg.router)
+app.include_router(bookings.router)
+#app.include_router(reviews.router)
