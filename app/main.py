@@ -17,4 +17,4 @@ def index():
 app.include_router(login.router)
 app.include_router(pg.router)
 app.include_router(bookings.router)
-#app.include_router(reviews.router)
+app.include_router(reviews.router)

@@ -24,7 +24,7 @@ def create_booking(booking_data: schemas.BookingCreate, db: Session = Depends(db
     db.refresh(new_booking)
     return {"id" : new_booking.id,
             "pg_name" : pg.name,
-            "user_email" : user.email,
+            "user_name" : user.name,
             "status" : new_booking.status
             }
 
@@ -38,20 +38,9 @@ def update_booking_status(booking_id: int, status: str, db: Session = Depends(db
     return {
         "id" : booking.id,
         "pg_name" : booking.pg.name,
-        "user_email" : booking.user.email,
+        "user_name" : booking.user.name,
         "status" : booking.status
     }
-
-# def show_booking_status(booking_id: int, db: Session = Depends(db.get_db), current_user: dict = Depends(token.get_current_user)):
-#     booking = db.query(models.Booking).filter(models.Booking.id==booking_id).first()
-#     if not booking_id:
-#         raise HTTPException(status_code=404, detail = f"Booking with the id {booking_id} is not available")
-#     return {
-#         "id" : booking.id,
-#         "pg_name" : booking.pg.name,
-#         "user_email" : booking.user.email,
-#         "status" : booking.status
-#     }
 
 def show_bookings(db: Session = Depends(db.get_db), current_user: dict = Depends(token.get_current_user)):
     if current_user["role"] == "admin":
@@ -73,6 +62,6 @@ def show_bookings(db: Session = Depends(db.get_db), current_user: dict = Depends
             "id": b.id,
             "status": b.status,
             "pg_name": b.pg.name,
-            "user_email": b.user.email
+            "user_name": b.user.name
         })
     return result                       

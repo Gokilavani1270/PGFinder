@@ -62,9 +62,9 @@ class BookingBase(BaseModel):
 class BookingCreate(BookingBase):
     pass
 
-class BookingResponse(BookingBase):
+class BookingResponse(BaseModel):
     id: int
-    user_email: str
+    user_name: str
     pg_name: str
     status: str
 
@@ -81,16 +81,19 @@ class BookingStatus(BookingBase):
 # ---------------------- Schema for Reviews ----------------------
 
 class ReviewBase(BaseModel):
-    pg_id: int
+    pg_name: str
     rating: int
     comment: Optional[str] = None
 
 class ReviewCreate(ReviewBase):
     pass
 
-class ReviewResponse(ReviewBase):
+class ReviewResponse(BaseModel):
     id: int
-    user_id: int
+    user_name: str
+    pg_name: str
+    rating: int
+    comment: Optional[str] = None
 
     class Config:
         orm_mode = True

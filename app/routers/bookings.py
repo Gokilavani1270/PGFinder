@@ -20,10 +20,6 @@ def create_booking(booking_data: schemas.BookingCreate, db: Session = Depends(db
 def update_booking_status(booking_id: int, status: str, db: Session = Depends(db.get_db), current_user: dict = Depends(admin_required)):
     return bookings.update_booking_status(booking_id, status, db)
 
-# @router.get('/{booking_id}', response_model=schemas.BookingStatus)
-# def show_booking_status(booking_id: int, db: Session = Depends(db.get_db), current_user: dict = Depends(token.get_current_user)):
-#     return bookings.show_booking_status(booking_id, db)
-
 @router.get("/all", response_model=List[schemas.BookingResponse])
 def show_bookings(db: Session = Depends(db.get_db), current_user: dict = Depends(token.get_current_user)):
     return bookings.show_bookings(db, current_user)
